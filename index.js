@@ -31,59 +31,51 @@ const FALLBACK_RESPONSES = {
     text: "¡Hola! 👋 Bienvenido a *RoaBusiness*, el directorio digital para negocios locales.\n\n¿Cómo podemos ayudarte hoy?",
     buttons: [
       { id: "btn_registro", title: "📋 Registrar negocio" },
-      { id: "btn_admin",    title: "💬 Hablar con asesor" },
+      { id: "btn_admin", title: "💬 Hablar con asesor" },
     ],
   },
   waiting_intent: {
     text: "Elige una opción para continuar 👇",
     buttons: [
       { id: "btn_registro", title: "📋 Registrar negocio" },
-      { id: "btn_admin",    title: "💬 Hablar con asesor" },
+      { id: "btn_admin", title: "💬 Hablar con asesor" },
     ],
   },
   waiting_business_name: {
     text: "Paso 1/5 — ✏️ *¿Cuál es el nombre de tu negocio?*\n\nEscríbelo a continuación:",
-    buttons: [
-      { id: "btn_cancelar_reg", title: "❌ Cancelar registro" },
-    ],
+    buttons: [{ id: "btn_cancelar_reg", title: "❌ Cancelar registro" }],
   },
   waiting_contact_phone: {
     text: "Paso 2/5 — 📞 *¿Cuál es el teléfono de contacto?*\n\nEscríbelo, o usa el botón para usar tu número actual:",
     buttons: [
-      { id: "btn_usar_numero",  title: "📱 Usar este número" },
+      { id: "btn_usar_numero", title: "📱 Usar este número" },
       { id: "btn_cancelar_reg", title: "❌ Cancelar" },
     ],
   },
   waiting_description: {
     text: "Paso 3/5 — 📝 *Cuéntanos brevemente a qué se dedica tu negocio:*",
-    buttons: [
-      { id: "btn_cancelar_reg", title: "❌ Cancelar registro" },
-    ],
+    buttons: [{ id: "btn_cancelar_reg", title: "❌ Cancelar registro" }],
   },
   waiting_plan: {
     text: "Paso 4/5 — 💼 *Elige tu plan:*\n\n🔹 *Básico* $9.99/mes — Perfil + contacto\n🔸 *Profesional* $19.99/mes — + galería + mapa\n⭐ *Premium* $34.99/mes — + video + posición top",
     buttons: [
-      { id: "btn_basico",       title: "🔹 Básico $9.99" },
-      { id: "btn_profesional",  title: "🔸 Profesional $19.99" },
-      { id: "btn_premium",      title: "⭐ Premium $34.99" },
+      { id: "btn_basico", title: "🔹 Básico $9.99" },
+      { id: "btn_profesional", title: "🔸 Profesional $19.99" },
+      { id: "btn_premium", title: "⭐ Premium $34.99" },
     ],
   },
   waiting_logo: {
     text: "Paso 5a/5 — 🖼️ *Envía el logo de tu negocio como imagen.*\n\nFormatos aceptados: JPG, PNG",
-    buttons: [
-      { id: "btn_cancelar_reg", title: "❌ Cancelar registro" },
-    ],
+    buttons: [{ id: "btn_cancelar_reg", title: "❌ Cancelar registro" }],
   },
   waiting_cover: {
     text: "Paso 5b/5 — 🖼️ ¡Logo recibido! ✅\n\n*Ahora envía la imagen de portada de tu negocio:*",
-    buttons: [
-      { id: "btn_cancelar_reg", title: "❌ Cancelar registro" },
-    ],
+    buttons: [{ id: "btn_cancelar_reg", title: "❌ Cancelar registro" }],
   },
   waiting_payment_proof: {
     text: "Paso 5c/5 — 💳 ¡Portada recibida! ✅\n\nRealiza tu pago y *envía el comprobante como imagen.*\n\nDatos bancarios: _te los enviará el asesor_",
     buttons: [
-      { id: "btn_datos_pago",   title: "💳 Ver datos de pago" },
+      { id: "btn_datos_pago", title: "💳 Ver datos de pago" },
       { id: "btn_cancelar_reg", title: "❌ Cancelar" },
     ],
   },
@@ -91,7 +83,7 @@ const FALLBACK_RESPONSES = {
     text: "📋 *Resumen de tu solicitud:*\n\n🏢 Negocio: {business}\n📞 Teléfono: {phone}\n📝 Descripción: {desc}\n💼 Plan: {plan}\n\n¿Confirmas el registro?",
     buttons: [
       { id: "btn_confirmar", title: "✅ Confirmar" },
-      { id: "btn_cancelar",  title: "❌ Cancelar" },
+      { id: "btn_cancelar", title: "❌ Cancelar" },
     ],
   },
   complete: {
@@ -105,40 +97,36 @@ const FALLBACK_RESPONSES = {
     text: "Tu solicitud está *pendiente de aprobación*. Pronto te contactaremos. 🙌",
     buttons: [
       { id: "btn_asesor", title: "💬 Hablar con asesor" },
-      { id: "btn_nuevo",  title: "🔄 Nuevo registro" },
+      { id: "btn_nuevo", title: "🔄 Nuevo registro" },
     ],
   },
   contact_admin: {
     text: "📞 Un asesor de *RoaBusiness* se pondrá en contacto contigo muy pronto.\n\nTambién puedes escribirnos a: _admin@roabusiness.com_ 🙌",
-    buttons: [
-      { id: "btn_volver", title: "↩️ Menú principal" },
-    ],
+    buttons: [{ id: "btn_volver", title: "↩️ Menú principal" }],
   },
   invalid_plan: {
     text: "Por favor elige uno de estos planes 👇",
     buttons: [
-      { id: "btn_basico",      title: "🔹 Básico $9.99" },
+      { id: "btn_basico", title: "🔹 Básico $9.99" },
       { id: "btn_profesional", title: "🔸 Profesional $19.99" },
-      { id: "btn_premium",     title: "⭐ Premium $34.99" },
+      { id: "btn_premium", title: "⭐ Premium $34.99" },
     ],
   },
   need_image: {
     text: "Por favor envía la imagen para continuar. 📷",
-    buttons: [
-      { id: "btn_cancelar_reg", title: "❌ Cancelar registro" },
-    ],
+    buttons: [{ id: "btn_cancelar_reg", title: "❌ Cancelar registro" }],
   },
   cancelled: {
     text: "Registro cancelado 🙅‍♂️\n\n¡Sin problema! Escríbenos cuando quieras.",
     buttons: [
-      { id: "btn_nuevo",  title: "🔄 Empezar de nuevo" },
+      { id: "btn_nuevo", title: "🔄 Empezar de nuevo" },
       { id: "btn_asesor", title: "💬 Hablar con asesor" },
     ],
   },
   datos_pago: {
     text: "💳 *Datos bancarios para el pago:*\n\nBanco: _Banco Ejemplo_\nCuenta: _0000-0000-0000_\nTitular: _RoaBusiness SA_\n\nEnvía el comprobante como imagen cuando realices el pago.",
     buttons: [
-      { id: "btn_ya_pague",     title: "✅ Ya pagué" },
+      { id: "btn_ya_pague", title: "✅ Ya pagué" },
       { id: "btn_cancelar_reg", title: "❌ Cancelar registro" },
     ],
   },
@@ -293,20 +281,62 @@ async function guardarSolicitud(lead) {
 }
 
 // ─── WhatsApp: mensaje de texto ───────────────────────────────────────────────
+// ─── WhatsApp: envía POST a Graph API ────────────────────────────────────────
+// Devuelve { ok, status, body } para que el llamador pueda reaccionar
+function waPost(phoneNumberId, postData) {
+  return new Promise((resolve) => {
+    const opts = {
+      hostname: "graph.facebook.com",
+      path: `/v17.0/${phoneNumberId}/messages`,
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${WHATSAPP_TOKEN}`,
+        "Content-Type": "application/json",
+        "Content-Length": Buffer.byteLength(postData),
+      },
+    };
+    const req = https.request(opts, (res) => {
+      let body = "";
+      res.on("data", (c) => (body += c));
+      res.on("end", () => {
+        const ok = res.statusCode >= 200 && res.statusCode < 300;
+        if (!ok) {
+          console.error(`[WA ✗] HTTP ${res.statusCode} →`, body);
+        } else {
+          console.log(`[WA ✓] HTTP ${res.statusCode}`);
+        }
+        resolve({ ok, status: res.statusCode, body });
+      });
+    });
+    req.on("error", (e) => {
+      console.error("[WA] Error de red:", e.message);
+      resolve({ ok: false, status: 0, body: e.message });
+    });
+    req.write(postData);
+    req.end();
+  });
+}
+
+// Trunca título de botón a 20 chars seguros (sin cortar emojis)
+function truncBtn(title) {
+  const arr = [...title]; // split por code points (soporta emojis)
+  return arr.slice(0, 20).join("");
+}
+
 function sendWhatsAppMessage(phoneNumberId, to, text) {
   if (!WHATSAPP_TOKEN) {
     console.warn("[WARN] WHATSAPP_TOKEN no configurado.");
-    return;
+    return Promise.resolve();
   }
-  waPost(
+  return waPost(
     phoneNumberId,
     JSON.stringify({ messaging_product: "whatsapp", to, text: { body: text } }),
   );
 }
 
-// ─── WhatsApp: mensaje interactivo con botones ────────────────────────────────
+// ─── WhatsApp: mensaje interactivo con botones + fallback a texto ─────────────
 // buttons: [{id: "btn_id", title: "Texto botón"}]  (máx 3)
-function sendWhatsAppInteractive(phoneNumberId, to, bodyText, buttons) {
+async function sendWhatsAppInteractive(phoneNumberId, to, bodyText, buttons) {
   if (!WHATSAPP_TOKEN) {
     console.warn("[WARN] WHATSAPP_TOKEN no configurado.");
     return;
@@ -321,43 +351,27 @@ function sendWhatsAppInteractive(phoneNumberId, to, bodyText, buttons) {
       action: {
         buttons: buttons.slice(0, 3).map((b) => ({
           type: "reply",
-          reply: { id: b.id, title: b.title.substring(0, 20) },
+          reply: { id: b.id, title: truncBtn(b.title) },
         })),
       },
     },
   };
-  waPost(phoneNumberId, JSON.stringify(payload));
-}
-
-// ─── WhatsApp: envía POST a Graph API ────────────────────────────────────────
-function waPost(phoneNumberId, postData) {
-  const opts = {
-    hostname: "graph.facebook.com",
-    path: `/v17.0/${phoneNumberId}/messages`,
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${WHATSAPP_TOKEN}`,
-      "Content-Type": "application/json",
-      "Content-Length": Buffer.byteLength(postData),
-    },
-  };
-  const req = https.request(opts, (res) => {
-    let body = "";
-    res.on("data", (c) => (body += c));
-    res.on("end", () => console.log(`[WA →] ${res.statusCode}`));
-  });
-  req.on("error", (e) => console.error("[WA] Error:", e.message));
-  req.write(postData);
-  req.end();
+  const result = await waPost(phoneNumberId, JSON.stringify(payload));
+  // Si la API rechaza el mensaje interactivo → enviar solo el texto como fallback
+  if (!result.ok) {
+    console.warn("[WA] Interactivo rechazado, enviando texto plano como fallback");
+    const labelStr = buttons.map((b, i) => `${i + 1}. ${b.title}`).join("  ");
+    await sendWhatsAppMessage(phoneNumberId, to, `${bodyText}\n\n${labelStr}`);
+  }
 }
 
 // ─── Helper: envía texto o interactivo según si hay botones ──────────────────
 async function sendReply(phoneNumberId, to, replyObj, leadId, telefono) {
   if (!replyObj?.text) return;
   if (replyObj.buttons?.length) {
-    sendWhatsAppInteractive(phoneNumberId, to, replyObj.text, replyObj.buttons);
+    await sendWhatsAppInteractive(phoneNumberId, to, replyObj.text, replyObj.buttons);
   } else {
-    sendWhatsAppMessage(phoneNumberId, to, replyObj.text);
+    await sendWhatsAppMessage(phoneNumberId, to, replyObj.text);
   }
   await saveMessage(leadId, telefono, "saliente", "texto", replyObj.text);
 }
@@ -488,7 +502,10 @@ async function stateMachine(lead, textoMsg, urlImagen, buttonId) {
     if (buttonId === "btn_cancelar_reg") {
       await updateLead(lead.id, { bot_status: "waiting_intent" });
       const r = await getFixedResponse("welcome");
-      return { text: "Registro cancelado 🙅‍♂️\n\n" + (r?.text || ""), buttons: r?.buttons };
+      return {
+        text: "Registro cancelado 🙅‍♂️\n\n" + (r?.text || ""),
+        buttons: r?.buttons,
+      };
     }
     if (buttonId === "btn_asesor") {
       await updateLead(lead.id, { bot_status: "attended" });
@@ -567,7 +584,9 @@ async function stateMachine(lead, textoMsg, urlImagen, buttonId) {
         console.log(`[FSM] ✅ Fija: nombre="${textoMsg.trim()}"`);
       } else {
         const faqMatch = await matchPregunta(textoMsg);
-        const wbnFallbackBtns = (await getFixedResponse("waiting_business_name"))?.buttons;
+        const wbnFallbackBtns = (
+          await getFixedResponse("waiting_business_name")
+        )?.buttons;
         replyObj =
           faqMatch || {
             text: (await openAI_Fallback(lead, textoMsg)) || "",
@@ -583,12 +602,16 @@ async function stateMachine(lead, textoMsg, urlImagen, buttonId) {
     // ── 4. Teléfono ────────────────────────────────────────────────────────
     case "waiting_contact_phone": {
       const usarPropioNumero = buttonId === "btn_usar_numero";
-      const telefonoRegistrar = usarPropioNumero ? lead.user_phone : textoMsg.trim();
+      const telefonoRegistrar = usarPropioNumero
+        ? lead.user_phone
+        : textoMsg.trim();
       if (usarPropioNumero || esTextoUtil(textoMsg)) {
         await updateLead(lead.id, { contact_phone: telefonoRegistrar });
         replyObj = await getFixedResponse("waiting_description");
         nextState = "waiting_description";
-        console.log(`[FSM] ✅ Fija: teléfono="${telefonoRegistrar}"${usarPropioNumero ? " (propio)" : ""}`);
+        console.log(
+          `[FSM] ✅ Fija: teléfono="${telefonoRegistrar}"${usarPropioNumero ? " (propio)" : ""}`,
+        );
       } else {
         replyObj = await getFixedResponse("waiting_contact_phone");
       }
@@ -709,7 +732,8 @@ async function stateMachine(lead, textoMsg, urlImagen, buttonId) {
         /cancel|no |no$|no\b/i.test(textoMsg)
       ) {
         await updateLead(lead.id, { bot_status: "attended" });
-        replyObj = (await getFixedResponse("cancelled")) || FALLBACK_RESPONSES.cancelled;
+        replyObj =
+          (await getFixedResponse("cancelled")) || FALLBACK_RESPONSES.cancelled;
         nextState = null;
         console.log("[FSM] ✅ Fija: cancelado");
       } else {
@@ -745,7 +769,8 @@ async function stateMachine(lead, textoMsg, urlImagen, buttonId) {
       console.warn("[FSM] ⚠ Estado desconocido:", estado);
       const defaultBtns = (await getFixedResponse("waiting_intent"))?.buttons;
       replyObj = {
-        text: (await openAI_Fallback(lead, textoMsg)) || "¿En qué puedo ayudarte?",
+        text:
+          (await openAI_Fallback(lead, textoMsg)) || "¿En qué puedo ayudarte?",
         buttons: defaultBtns,
       };
     }
