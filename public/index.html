@@ -3,66 +3,106 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>WAPI - Mensajes recibidos</title>
+    <title>RoaBusiness Bot – Panel</title>
     <style>
-      body {
-        font-family: Arial, sans-serif;
-        margin: 16px;
-      }
-      h1 {
-        font-size: 20px;
-      }
-      #list {
-        margin-top: 12px;
-      }
-      .msg {
-        padding: 8px;
-        border: 1px solid #ddd;
-        border-radius: 6px;
-        margin-bottom: 8px;
-      }
-      .meta {
-        font-size: 12px;
-        color: #666;
-      }
+      * { box-sizing: border-box; }
+      body { font-family: Arial, sans-serif; margin: 0; background: #f5f5f5; }
+      header { background: #25d366; color: #fff; padding: 14px 20px; }
+      header h1 { margin: 0; font-size: 20px; }
+      nav { display: flex; gap: 8px; padding: 12px 20px; background: #fff; border-bottom: 1px solid #ddd; }
+      nav button { padding: 6px 16px; border: 1px solid #25d366; border-radius: 20px; cursor: pointer; background: #fff; color: #25d366; font-size: 14px; }
+      nav button.active { background: #25d366; color: #fff; }
+      #status { padding: 6px 20px; font-size: 12px; color: #888; }
+      #content { padding: 16px 20px; }
+      .card { background: #fff; border-radius: 8px; border: 1px solid #e0e0e0; padding: 12px 16px; margin-bottom: 10px; }
+      .card .meta { font-size: 11px; color: #999; margin-bottom: 4px; }
+      .badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: bold; }
+      .badge.entrante { background: #e8f5e9; color: #2e7d32; }
+      .badge.saliente { background: #e3f2fd; color: #1565c0; }
+      .badge.pendiente { background: #fff8e1; color: #f57f17; }
+      .badge.aprobada  { background: #e8f5e9; color: #2e7d32; }
+      .badge.rechazada { background: #ffebee; color: #c62828; }
+      .empty { text-align: center; color: #aaa; padding: 40px; }
     </style>
   </head>
   <body>
-    <h1>Mensajes recibidos</h1>
-    <div id="status">Conectando...</div>
-    <div id="list"></div>
+    <header><h1>🤖 RoaBusiness Bot – Panel</h1></header>
+
+    <nav>
+      <button class="active" onclick="showTab('mensajes', this)">💬 Mensajes</button>
+      <button onclick="showTab('solicitudes', this)">📋 Solicitudes</button>
+    </nav>
+
+    <div id="status">Actualizando...</div>
+    <div id="content"></div>
 
     <script>
-      const list = document.getElementById("list");
-      const status = document.getElementById("status");
+      let currentTab = 'mensajes';
+      let refreshTimer = null;
 
-      function addMessage(item) {
-        const d = document.createElement("div");
-        d.className = "msg";
-        d.innerHTML = `<div class="meta">From: ${item.from} — ${new Date(item.timestamp).toLocaleString()}</div><div>${item.text}</div>`;
-        list.prepend(d);
+      function showTab(tab, btn) {
+        currentTab = tab;
+        document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        loadData();
       }
 
-      const es = new EventSource("/events");
-      es.onopen = () => {
-        status.textContent = "Conectado (esperando mensajes)";
-      };
-      es.onerror = () => {
-        status.textContent = "Error de conexión";
-      };
-      es.onmessage = (e) => {
+      function fmtDate(ts) {
+        if (!ts) return '';
+        return new Date(ts).toLocaleString('es', { dateStyle: 'short', timeStyle: 'short' });
+      }
+
+      function renderMensajes(data) {
+        if (!data.length) return '<div class="empty">Sin mensajes aún.</div>';
+        return data.map(m => `
+          <div class="card">
+            <div class="meta">
+              📱 <b>${m.telefono}</b>
+              &nbsp;·&nbsp; <span class="badge ${m.direccion}">${m.direccion}</span>
+              &nbsp;·&nbsp; ${fmtDate(m.creado_en)}
+            </div>
+            <div>${m.contenido || (m.url_medio ? `<a href="${m.url_medio}" target="_blank">📎 Ver imagen</a>` : '—')}</div>
+          </div>`).join('');
+      }
+
+      function renderSolicitudes(data) {
+        if (!data.length) return '<div class="empty">Sin solicitudes aún.</div>';
+        return data.map(s => `
+          <div class="card">
+            <div class="meta">
+              🗓 ${fmtDate(s.creado_en)}
+              &nbsp;·&nbsp; <span class="badge ${s.estado}">${s.estado}</span>
+            </div>
+            <b>${s.nombre_negocio}</b> — ${s.nombre_persona}<br>
+            📍 ${s.direccion}<br>
+            📞 ${s.telefonos} &nbsp;·&nbsp; ✉️ ${s.email}<br>
+            💼 Plan: <b>${s.plan_elegido}</b><br>
+            ${s.url_logo      ? `<a href="${s.url_logo}"      target="_blank">🖼 Logo</a> &nbsp;` : ''}
+            ${s.url_portada   ? `<a href="${s.url_portada}"   target="_blank">🖼 Portada</a> &nbsp;` : ''}
+            ${s.url_comprobante_pago ? `<a href="${s.url_comprobante_pago}" target="_blank">🧾 Comprobante</a>` : ''}
+          </div>`).join('');
+      }
+
+      async function loadData() {
+        const statusEl = document.getElementById('status');
+        const contentEl = document.getElementById('content');
+        statusEl.textContent = 'Actualizando...';
         try {
-          const payload = JSON.parse(e.data);
-          if (payload && payload.type === "init" && payload.messages) {
-            list.innerHTML = "";
-            payload.messages.forEach(addMessage);
-          } else if (payload && payload.from) {
-            addMessage(payload);
-          }
-        } catch (err) {
-          console.error("Malformed message", e.data);
+          const res = await fetch(`/${currentTab}`);
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          const data = await res.json();
+          contentEl.innerHTML = currentTab === 'mensajes'
+            ? renderMensajes(data)
+            : renderSolicitudes(data);
+          statusEl.textContent = `✔ Actualizado ${new Date().toLocaleTimeString()} · ${data.length} registros`;
+        } catch (e) {
+          statusEl.textContent = `⚠ Error: ${e.message}`;
         }
-      };
+        clearTimeout(refreshTimer);
+        refreshTimer = setTimeout(loadData, 10000); // refresca cada 10s
+      }
+
+      loadData();
     </script>
   </body>
 </html>
