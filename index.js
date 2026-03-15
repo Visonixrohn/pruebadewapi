@@ -28,85 +28,119 @@ if (!supabase) console.warn("[WARN] Supabase no configurado.");
 // Formato: { text, buttons }  donde buttons = [{id, title}] o null
 const FALLBACK_RESPONSES = {
   welcome: {
-    text: "¡Hola! 👋 Bienvenido a *RoaBusiness*, el directorio digital para negocios.\n\n¿Cómo podemos ayudarte hoy?",
+    text: "¡Hola! 👋 Bienvenido a *RoaBusiness*, el directorio digital para negocios locales.\n\n¿Cómo podemos ayudarte hoy?",
     buttons: [
-      { id: "btn_registro", title: "Registrar mi negocio" },
-      { id: "btn_admin", title: "Hablar con un asesor" },
+      { id: "btn_registro", title: "📋 Registrar negocio" },
+      { id: "btn_admin",    title: "💬 Hablar con asesor" },
     ],
   },
   waiting_intent: {
-    text: "Por favor selecciona una opción 👇",
+    text: "Elige una opción para continuar 👇",
     buttons: [
-      { id: "btn_registro", title: "Registrar mi negocio" },
-      { id: "btn_admin", title: "Hablar con un asesor" },
+      { id: "btn_registro", title: "📋 Registrar negocio" },
+      { id: "btn_admin",    title: "💬 Hablar con asesor" },
     ],
   },
   waiting_business_name: {
-    text: "¿Cuál es el *nombre de tu negocio*?",
-    buttons: null,
+    text: "Paso 1/5 — ✏️ *¿Cuál es el nombre de tu negocio?*\n\nEscríbelo a continuación:",
+    buttons: [
+      { id: "btn_cancelar_reg", title: "❌ Cancelar registro" },
+    ],
   },
   waiting_contact_phone: {
-    text: "¡Genial! ¿Cuál es el *teléfono de contacto* de tu negocio?",
-    buttons: null,
+    text: "Paso 2/5 — 📞 *¿Cuál es el teléfono de contacto?*\n\nEscríbelo, o usa el botón para usar tu número actual:",
+    buttons: [
+      { id: "btn_usar_numero",  title: "📱 Usar este número" },
+      { id: "btn_cancelar_reg", title: "❌ Cancelar" },
+    ],
   },
   waiting_description: {
-    text: "Perfecto 👍 Cuéntanos brevemente *a qué se dedica* tu negocio.",
-    buttons: null,
+    text: "Paso 3/5 — 📝 *Cuéntanos brevemente a qué se dedica tu negocio:*",
+    buttons: [
+      { id: "btn_cancelar_reg", title: "❌ Cancelar registro" },
+    ],
   },
   waiting_plan: {
-    text: "Elige tu plan 👇",
+    text: "Paso 4/5 — 💼 *Elige tu plan:*\n\n🔹 *Básico* $9.99/mes — Perfil + contacto\n🔸 *Profesional* $19.99/mes — + galería + mapa\n⭐ *Premium* $34.99/mes — + video + posición top",
     buttons: [
-      { id: "btn_basico", title: "Básico $9.99/mes" },
-      { id: "btn_profesional", title: "Profesional $19.99/mes" },
-      { id: "btn_premium", title: "Premium $34.99/mes" },
+      { id: "btn_basico",       title: "🔹 Básico $9.99" },
+      { id: "btn_profesional",  title: "🔸 Profesional $19.99" },
+      { id: "btn_premium",      title: "⭐ Premium $34.99" },
     ],
   },
   waiting_logo: {
-    text: "¡Plan registrado! ✅ Ahora envía el *logo* de tu negocio como imagen.",
-    buttons: null,
+    text: "Paso 5a/5 — 🖼️ *Envía el logo de tu negocio como imagen.*\n\nFormatos aceptados: JPG, PNG",
+    buttons: [
+      { id: "btn_cancelar_reg", title: "❌ Cancelar registro" },
+    ],
   },
   waiting_cover: {
-    text: "¡Logo recibido! ✅ Ahora envía la *imagen de portada* de tu negocio.",
-    buttons: null,
+    text: "Paso 5b/5 — 🖼️ ¡Logo recibido! ✅\n\n*Ahora envía la imagen de portada de tu negocio:*",
+    buttons: [
+      { id: "btn_cancelar_reg", title: "❌ Cancelar registro" },
+    ],
   },
   waiting_payment_proof: {
-    text: "¡Portada recibida! ✅ Realiza tu pago y envía el *comprobante* como imagen.",
-    buttons: null,
+    text: "Paso 5c/5 — 💳 ¡Portada recibida! ✅\n\nRealiza tu pago y *envía el comprobante como imagen.*\n\nDatos bancarios: _te los enviará el asesor_",
+    buttons: [
+      { id: "btn_datos_pago",   title: "💳 Ver datos de pago" },
+      { id: "btn_cancelar_reg", title: "❌ Cancelar" },
+    ],
   },
   waiting_confirmation: {
     text: "📋 *Resumen de tu solicitud:*\n\n🏢 Negocio: {business}\n📞 Teléfono: {phone}\n📝 Descripción: {desc}\n💼 Plan: {plan}\n\n¿Confirmas el registro?",
     buttons: [
-      { id: "btn_confirmar", title: "✅ Confirmar registro" },
-      { id: "btn_cancelar", title: "❌ Cancelar" },
+      { id: "btn_confirmar", title: "✅ Confirmar" },
+      { id: "btn_cancelar",  title: "❌ Cancelar" },
     ],
   },
   complete: {
-    text: "✅ ¡Registro completado! Tu solicitud para *{business}* está en revisión. Te contactaremos pronto. 🚀",
-    buttons: null,
+    text: "🎉 ¡Registro completado! Tu solicitud para *{business}* está en revisión.\n\nTe contactaremos pronto. 🚀",
+    buttons: [
+      { id: "btn_asesor", title: "💬 Hablar con asesor" },
+      { id: "btn_volver", title: "↩️ Menú principal" },
+    ],
   },
   attended: {
-    text: "Tu solicitud ya fue recibida y está *pendiente de aprobación*. Pronto te contactaremos. 🙌",
-    buttons: null,
+    text: "Tu solicitud está *pendiente de aprobación*. Pronto te contactaremos. 🙌",
+    buttons: [
+      { id: "btn_asesor", title: "💬 Hablar con asesor" },
+      { id: "btn_nuevo",  title: "🔄 Nuevo registro" },
+    ],
   },
   contact_admin: {
     text: "📞 Un asesor de *RoaBusiness* se pondrá en contacto contigo muy pronto.\n\nTambién puedes escribirnos a: _admin@roabusiness.com_ 🙌",
-    buttons: null,
+    buttons: [
+      { id: "btn_volver", title: "↩️ Menú principal" },
+    ],
   },
   invalid_plan: {
-    text: "Por favor elige una de las opciones de plan 👇",
+    text: "Por favor elige uno de estos planes 👇",
     buttons: [
-      { id: "btn_basico", title: "Básico $9.99/mes" },
-      { id: "btn_profesional", title: "Profesional $19.99/mes" },
-      { id: "btn_premium", title: "Premium $34.99/mes" },
+      { id: "btn_basico",      title: "🔹 Básico $9.99" },
+      { id: "btn_profesional", title: "🔸 Profesional $19.99" },
+      { id: "btn_premium",     title: "⭐ Premium $34.99" },
     ],
   },
   need_image: {
     text: "Por favor envía la imagen para continuar. 📷",
-    buttons: null,
+    buttons: [
+      { id: "btn_cancelar_reg", title: "❌ Cancelar registro" },
+    ],
   },
   cancelled: {
-    text: "Registro cancelado. Si cambias de opinión, escríbenos cuando quieras. 😊",
-    buttons: null,
+    text: "Registro cancelado 🙅‍♂️\n\n¡Sin problema! Escríbenos cuando quieras.",
+    buttons: [
+      { id: "btn_nuevo",  title: "🔄 Empezar de nuevo" },
+      { id: "btn_asesor", title: "💬 Hablar con asesor" },
+    ],
+  },
+  datos_pago: {
+    text: "💳 *Datos bancarios para el pago:*\n\nBanco: _Banco Ejemplo_\nCuenta: _0000-0000-0000_\nTitular: _RoaBusiness SA_\n\nEnvía el comprobante como imagen cuando realices el pago.",
+    buttons: [
+      { id: "btn_ya_pague",     title: "✅ Ya pagué" },
+      { id: "btn_cancelar_reg", title: "❌ Cancelar registro" },
+    ],
   },
 };
 
@@ -449,6 +483,35 @@ async function stateMachine(lead, textoMsg, urlImagen, buttonId) {
   let replyObj = null;
   let nextState = null;
 
+  // ── Interceptor global: botones de navegación disponibles en CUALQUIER estado
+  if (buttonId) {
+    if (buttonId === "btn_cancelar_reg") {
+      await updateLead(lead.id, { bot_status: "waiting_intent" });
+      const r = await getFixedResponse("welcome");
+      return { text: "Registro cancelado 🙅‍♂️\n\n" + (r?.text || ""), buttons: r?.buttons };
+    }
+    if (buttonId === "btn_asesor") {
+      await updateLead(lead.id, { bot_status: "attended" });
+      return await getFixedResponse("contact_admin");
+    }
+    if (buttonId === "btn_nuevo") {
+      await updateLead(lead.id, { bot_status: "new_lead" });
+      return await getFixedResponse("welcome");
+    }
+    if (buttonId === "btn_volver") {
+      await updateLead(lead.id, { bot_status: "waiting_intent" });
+      return await getFixedResponse("welcome");
+    }
+    if (buttonId === "btn_datos_pago") {
+      return await getFixedResponse("datos_pago");
+    }
+    if (buttonId === "btn_ya_pague") {
+      // El usuario dice que ya pagó pero no mandó imagen — recordar
+      return await getFixedResponse("need_image");
+    }
+  }
+  // ────────────────────────────────────────────────────────────────────────────
+
   switch (estado) {
     // ── 1. Primer contacto → bienvenida + botones ──────────────────────────
     case "new_lead": {
@@ -504,10 +567,11 @@ async function stateMachine(lead, textoMsg, urlImagen, buttonId) {
         console.log(`[FSM] ✅ Fija: nombre="${textoMsg.trim()}"`);
       } else {
         const faqMatch = await matchPregunta(textoMsg);
+        const wbnFallbackBtns = (await getFixedResponse("waiting_business_name"))?.buttons;
         replyObj =
           faqMatch || {
             text: (await openAI_Fallback(lead, textoMsg)) || "",
-            buttons: null,
+            buttons: wbnFallbackBtns,
           } ||
           (await getFixedResponse("waiting_business_name"));
         if (!replyObj.text)
@@ -518,11 +582,13 @@ async function stateMachine(lead, textoMsg, urlImagen, buttonId) {
 
     // ── 4. Teléfono ────────────────────────────────────────────────────────
     case "waiting_contact_phone": {
-      if (esTextoUtil(textoMsg)) {
-        await updateLead(lead.id, { contact_phone: textoMsg.trim() });
+      const usarPropioNumero = buttonId === "btn_usar_numero";
+      const telefonoRegistrar = usarPropioNumero ? lead.user_phone : textoMsg.trim();
+      if (usarPropioNumero || esTextoUtil(textoMsg)) {
+        await updateLead(lead.id, { contact_phone: telefonoRegistrar });
         replyObj = await getFixedResponse("waiting_description");
         nextState = "waiting_description";
-        console.log("[FSM] ✅ Fija: teléfono guardado");
+        console.log(`[FSM] ✅ Fija: teléfono="${telefonoRegistrar}"${usarPropioNumero ? " (propio)" : ""}`);
       } else {
         replyObj = await getFixedResponse("waiting_contact_phone");
       }
@@ -634,7 +700,7 @@ async function stateMachine(lead, textoMsg, urlImagen, buttonId) {
             "{business}",
             lead.business_name || "tu negocio",
           ),
-          buttons: null,
+          buttons: tpl?.buttons || FALLBACK_RESPONSES.complete.buttons,
         };
         nextState = null; // ya actualizamos bot_status arriba
         console.log(`[FSM] ✅ COMPLETO y guardado: ${lead.user_phone}`);
@@ -643,10 +709,7 @@ async function stateMachine(lead, textoMsg, urlImagen, buttonId) {
         /cancel|no |no$|no\b/i.test(textoMsg)
       ) {
         await updateLead(lead.id, { bot_status: "attended" });
-        replyObj = (await getFixedResponse("cancelled")) || {
-          text: "Registro cancelado. ¡Escríbenos si cambias de opinión! 😊",
-          buttons: null,
-        };
+        replyObj = (await getFixedResponse("cancelled")) || FALLBACK_RESPONSES.cancelled;
         nextState = null;
         console.log("[FSM] ✅ Fija: cancelado");
       } else {
@@ -680,10 +743,10 @@ async function stateMachine(lead, textoMsg, urlImagen, buttonId) {
 
     default: {
       console.warn("[FSM] ⚠ Estado desconocido:", estado);
+      const defaultBtns = (await getFixedResponse("waiting_intent"))?.buttons;
       replyObj = {
-        text:
-          (await openAI_Fallback(lead, textoMsg)) || "¿En qué puedo ayudarte?",
-        buttons: null,
+        text: (await openAI_Fallback(lead, textoMsg)) || "¿En qué puedo ayudarte?",
+        buttons: defaultBtns,
       };
     }
   }

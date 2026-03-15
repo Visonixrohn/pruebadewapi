@@ -39,43 +39,108 @@ ALTER TABLE leads
 ALTER TABLE bot_responses
   ADD COLUMN IF NOT EXISTS buttons JSONB DEFAULT NULL;
 
--- Actualizar respuestas con botones interactivos
-UPDATE bot_responses SET buttons = '[
-  {"id":"btn_registro","title":"Registrar mi negocio"},
-  {"id":"btn_admin","title":"Hablar con asesor"}
-]'::jsonb
+-- Actualizar TODOS los mensajes con botones interactivos
+UPDATE bot_responses SET
+  message = '¡Hola! 👋 Bienvenido a *RoaBusiness*, el directorio digital para negocios locales.\n\n¿Cómo podemos ayudarte hoy?',
+  buttons = '[{"id":"btn_registro","title":"📋 Registrar negocio"},{"id":"btn_admin","title":"💬 Hablar con asesor"}]'::jsonb
 WHERE state_key = 'welcome';
 
-UPDATE bot_responses SET buttons = '[
-  {"id":"btn_basico","title":"Básico $9.99/mes"},
-  {"id":"btn_profesional","title":"Profesional $19.99/mes"},
-  {"id":"btn_premium","title":"Premium $34.99/mes"}
-]'::jsonb
+UPDATE bot_responses SET
+  message = 'Paso 1/5 — ✏️ *¿Cuál es el nombre de tu negocio?*\n\nEscríbelo a continuación:',
+  buttons = '[{"id":"btn_cancelar_reg","title":"❌ Cancelar registro"}]'::jsonb
+WHERE state_key = 'waiting_business_name';
+
+UPDATE bot_responses SET
+  message = 'Paso 2/5 — 📞 *¿Cuál es el teléfono de contacto?*\n\nEscríbelo, o usa el botón para usar tu número actual:',
+  buttons = '[{"id":"btn_usar_numero","title":"📱 Usar este número"},{"id":"btn_cancelar_reg","title":"❌ Cancelar"}]'::jsonb
+WHERE state_key = 'waiting_contact_phone';
+
+UPDATE bot_responses SET
+  message = 'Paso 3/5 — 📝 *Cuéntanos brevemente a qué se dedica tu negocio:*',
+  buttons = '[{"id":"btn_cancelar_reg","title":"❌ Cancelar registro"}]'::jsonb
+WHERE state_key = 'waiting_description';
+
+UPDATE bot_responses SET
+  message = 'Paso 4/5 — 💼 *Elige tu plan:*\n\n🔹 *Básico* $9.99/mes — Perfil + contacto\n🔸 *Profesional* $19.99/mes — + galería + mapa\n⭐ *Premium* $34.99/mes — + video + posición top',
+  buttons = '[{"id":"btn_basico","title":"🔹 Básico $9.99"},{"id":"btn_profesional","title":"🔸 Profesional $19.99"},{"id":"btn_premium","title":"⭐ Premium $34.99"}]'::jsonb
 WHERE state_key = 'waiting_plan';
 
-UPDATE bot_responses SET buttons = '[
-  {"id":"btn_confirmar","title":"✅ Confirmar registro"},
-  {"id":"btn_cancelar","title":"❌ Cancelar"}
-]'::jsonb
+UPDATE bot_responses SET
+  message = 'Paso 5a/5 — 🖼️ *Envía el logo de tu negocio como imagen.*\n\nFormatos aceptados: JPG, PNG',
+  buttons = '[{"id":"btn_cancelar_reg","title":"❌ Cancelar registro"}]'::jsonb
+WHERE state_key = 'waiting_logo';
+
+UPDATE bot_responses SET
+  message = 'Paso 5b/5 — 🖼️ ¡Logo recibido! ✅\n\n*Ahora envía la imagen de portada de tu negocio:*',
+  buttons = '[{"id":"btn_cancelar_reg","title":"❌ Cancelar registro"}]'::jsonb
+WHERE state_key = 'waiting_cover';
+
+UPDATE bot_responses SET
+  message = 'Paso 5c/5 — 💳 ¡Portada recibida! ✅\n\nRealiza tu pago y *envía el comprobante como imagen.*',
+  buttons = '[{"id":"btn_datos_pago","title":"💳 Ver datos de pago"},{"id":"btn_cancelar_reg","title":"❌ Cancelar"}]'::jsonb
+WHERE state_key = 'waiting_payment_proof';
+
+UPDATE bot_responses SET
+  message = '📋 *Resumen de tu solicitud:*\n\n🏢 Negocio: {business}\n📞 Teléfono: {phone}\n📝 Descripción: {desc}\n💼 Plan: {plan}\n\n¿Confirmas el registro?',
+  buttons = '[{"id":"btn_confirmar","title":"✅ Confirmar"},{"id":"btn_cancelar","title":"❌ Cancelar"}]'::jsonb
 WHERE state_key = 'waiting_confirmation';
 
--- Agregar respuesta de confirmación si no existe
+UPDATE bot_responses SET
+  message = '🎉 ¡Registro completado! Tu solicitud para *{business}* está en revisión.\n\nTe contactaremos pronto. 🚀',
+  buttons = '[{"id":"btn_asesor","title":"💬 Hablar con asesor"},{"id":"btn_volver","title":"↩️ Menú principal"}]'::jsonb
+WHERE state_key = 'complete';
+
+UPDATE bot_responses SET
+  message = 'Tu solicitud está *pendiente de aprobación*. Pronto te contactaremos. 🙌',
+  buttons = '[{"id":"btn_asesor","title":"💬 Hablar con asesor"},{"id":"btn_nuevo","title":"🔄 Nuevo registro"}]'::jsonb
+WHERE state_key = 'attended';
+
+UPDATE bot_responses SET
+  message = 'Por favor elige uno de estos planes 👇',
+  buttons = '[{"id":"btn_basico","title":"🔹 Básico $9.99"},{"id":"btn_profesional","title":"🔸 Profesional $19.99"},{"id":"btn_premium","title":"⭐ Premium $34.99"}]'::jsonb
+WHERE state_key = 'invalid_plan';
+
+UPDATE bot_responses SET
+  message = 'Por favor envía la imagen para continuar. 📷',
+  buttons = '[{"id":"btn_cancelar_reg","title":"❌ Cancelar registro"}]'::jsonb
+WHERE state_key = 'need_image';
+
+-- Insertar / actualizar registros que pueden no existir
 INSERT INTO bot_responses (state_key, message, buttons) VALUES
 (
   'waiting_confirmation',
   '📋 *Resumen de tu solicitud:*\n\n🏢 Negocio: {business}\n📞 Teléfono: {phone}\n📝 Descripción: {desc}\n💼 Plan: {plan}\n\n¿Confirmas el registro?',
-  '[{"id":"btn_confirmar","title":"✅ Confirmar registro"},{"id":"btn_cancelar","title":"❌ Cancelar"}]'::jsonb
+  '[{"id":"btn_confirmar","title":"✅ Confirmar"},{"id":"btn_cancelar","title":"❌ Cancelar"}]'::jsonb
 )
 ON CONFLICT (state_key) DO UPDATE
-  SET buttons = EXCLUDED.buttons;
+  SET message = EXCLUDED.message, buttons = EXCLUDED.buttons;
 
--- Agregar respuesta para admin
-INSERT INTO bot_responses (state_key, message) VALUES
+INSERT INTO bot_responses (state_key, message, buttons) VALUES
 (
   'contact_admin',
-  '📞 Un asesor de *RoaBusiness* se pondrá en contacto contigo muy pronto.\n\nTambién puedes escribirnos directamente a: _admin@roabusiness.com_\n\n¡Gracias por tu interés! 🙌'
+  '📞 Un asesor de *RoaBusiness* se pondrá en contacto contigo muy pronto.\n\nTambién puedes escribirnos a: _admin@roabusiness.com_ 🙌',
+  '[{"id":"btn_volver","title":"↩️ Menú principal"}]'::jsonb
 )
-ON CONFLICT (state_key) DO NOTHING;
+ON CONFLICT (state_key) DO UPDATE
+  SET message = EXCLUDED.message, buttons = EXCLUDED.buttons;
+
+INSERT INTO bot_responses (state_key, message, buttons) VALUES
+(
+  'cancelled',
+  'Registro cancelado 🙅‍♂️\n\n¡Sin problema! Escríbenos cuando quieras.',
+  '[{"id":"btn_nuevo","title":"🔄 Empezar de nuevo"},{"id":"btn_asesor","title":"💬 Hablar con asesor"}]'::jsonb
+)
+ON CONFLICT (state_key) DO UPDATE
+  SET message = EXCLUDED.message, buttons = EXCLUDED.buttons;
+
+INSERT INTO bot_responses (state_key, message, buttons) VALUES
+(
+  'datos_pago',
+  '💳 *Datos bancarios para el pago:*\n\nBanco: _Banco Ejemplo_\nCuenta: _0000-0000-0000_\nTitular: _RoaBusiness SA_\n\nEnvía el comprobante como imagen cuando realices el pago.',
+  '[{"id":"btn_ya_pague","title":"✅ Ya pagué"},{"id":"btn_cancelar_reg","title":"❌ Cancelar registro"}]'::jsonb
+)
+ON CONFLICT (state_key) DO UPDATE
+  SET message = EXCLUDED.message, buttons = EXCLUDED.buttons;
 
 
 -- ────────────────────────────────────────────────────────────
