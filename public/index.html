@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>WAPI - Mensajes recibidos</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 16px;
+      }
+      h1 {
+        font-size: 20px;
+      }
+      #list {
+        margin-top: 12px;
+      }
+      .msg {
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        margin-bottom: 8px;
+      }
+      .meta {
+        font-size: 12px;
+        color: #666;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Mensajes recibidos</h1>
+    <div id="status">Conectando...</div>
+    <div id="list"></div>
+
+    <script>
+      const list = document.getElementById("list");
+      const status = document.getElementById("status");
+
+      function addMessage(item) {
+        const d = document.createElement("div");
+        d.className = "msg";
+        d.innerHTML = `<div class="meta">From: ${item.from} — ${new Date(item.timestamp).toLocaleString()}</div><div>${item.text}</div>`;
+        list.prepend(d);
+      }
+
+      const es = new EventSource("/events");
+      es.onopen = () => {
+        status.textContent = "Conectado (esperando mensajes)";
+      };
+      es.onerror = () => {
+        status.textContent = "Error de conexión";
+      };
+      es.onmessage = (e) => {
+        try {
+          const payload = JSON.parse(e.data);
+          if (payload && payload.type === "init" && payload.messages) {
+            list.innerHTML = "";
+            payload.messages.forEach(addMessage);
+          } else if (payload && payload.from) {
+            addMessage(payload);
+          }
+        } catch (err) {
+          console.error("Malformed message", e.data);
+        }
+      };
+    </script>
+  </body>
+</html>
