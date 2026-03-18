@@ -1,0 +1,32 @@
+{
+  "name": "RoaBusiness – Panel",
+  "short_name": "RoaPanel",
+  "description": "Gestiona leads y mensajes de WhatsApp desde tu móvil",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#111B21",
+  "theme_color": "#00A884",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "categories": ["business", "productivity"],
+  "lang": "es"
+}

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="80" fill="#00A884"/>
+  <!-- Chat bubble -->
+  <path d="M256 100c-89.5 0-162 64-162 143 0 40 18.5 76.5 49 103l-15 55 57-18c21 9 44 14 71 14 89.5 0 162-64 162-154S345.5 100 256 100z" fill="#fff"/>
+  <!-- R letter -->
+  <text x="185" y="330" font-family="Arial Black,sans-serif" font-weight="900" font-size="170" fill="#00A884">R</text>
+</svg>

@@ -148,8 +148,12 @@ async function reloadCaches() {
       if (data?.length) {
         responsesCache.data = {};
         data.forEach((r) => {
-          if (!responsesCache.data[r.state_key]) responsesCache.data[r.state_key] = [];
-          responsesCache.data[r.state_key].push({ text: r.message, buttons: r.buttons || null });
+          if (!responsesCache.data[r.state_key])
+            responsesCache.data[r.state_key] = [];
+          responsesCache.data[r.state_key].push({
+            text: r.message,
+            buttons: r.buttons || null,
+          });
         });
         responsesCache.ts = now;
         console.log(
@@ -360,7 +364,9 @@ async function sendWhatsAppInteractive(phoneNumberId, to, bodyText, buttons) {
   const result = await waPost(phoneNumberId, JSON.stringify(payload));
   // Si la API rechaza el mensaje interactivo → enviar solo el texto como fallback
   if (!result.ok) {
-    console.warn("[WA] Interactivo rechazado, enviando texto plano como fallback");
+    console.warn(
+      "[WA] Interactivo rechazado, enviando texto plano como fallback",
+    );
     const labelStr = buttons.map((b, i) => `${i + 1}. ${b.title}`).join("  ");
     await sendWhatsAppMessage(phoneNumberId, to, `${bodyText}\n\n${labelStr}`);
   }
@@ -370,7 +376,12 @@ async function sendWhatsAppInteractive(phoneNumberId, to, bodyText, buttons) {
 async function sendReply(phoneNumberId, to, replyObj, leadId, telefono) {
   if (!replyObj?.text) return;
   if (replyObj.buttons?.length) {
-    await sendWhatsAppInteractive(phoneNumberId, to, replyObj.text, replyObj.buttons);
+    await sendWhatsAppInteractive(
+      phoneNumberId,
+      to,
+      replyObj.text,
+      replyObj.buttons,
+    );
   } else {
     await sendWhatsAppMessage(phoneNumberId, to, replyObj.text);
   }
@@ -471,9 +482,14 @@ const RE_SALUDO =
   /^(hola|hi|hello|buenas|buen[ao]s?\s?(d[ií]as?|tardes?|noches?))[\s!?.]*$/i;
 
 function detectarPlan(texto) {
-  const t = texto.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-  if (/premium|12|600/.test(t) || t === "2" || t === "btn_premium") return "Premium (12 Meses)";
-  if (/basico|pro|6|350/.test(t) || t === "1" || t === "btn_basico") return "Pro (6 Meses)";
+  const t = texto
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+  if (/premium|12|600/.test(t) || t === "2" || t === "btn_premium")
+    return "Premium (12 Meses)";
+  if (/basico|pro|6|350/.test(t) || t === "1" || t === "btn_basico")
+    return "Pro (6 Meses)";
   return null;
 }
 function esTextoUtil(t) {
@@ -905,9 +921,54 @@ app.get("/leads", async (req, res) => {
   const { data } = await supabase
     .from("leads")
     .select("*")
-    .order("created_at", { ascending: false });
+    .order("updated_at", { ascending: false });
   res.json(data || []);
 });
+
+// ─── GET /leads/:id/mensajes ──────────────────────────────────────────────────
+app.get("/leads/:id/mensajes", async (req, res) => {
+  if (!supabase) return res.json([]);
+  const { data } = await supabase
+    .from("mensajes")
+    .select("*")
+    .eq("lead_id", req.params.id)
+    .order("creado_en", { ascending: true });
+  res.json(data || []);
+});
+
+// ─── PATCH /leads/:id  (actualizar estado / campos) ──────────────────────────
+app.patch("/leads/:id", async (req, res) => {
+  if (!supabase) return res.status(503).json({ error: "Supabase no configurado" });
+  const { data, error } = await supabase
+    .from("leads")
+    .update(req.body)
+    .eq("id", req.params.id)
+    .select()
+    .single();
+  if (error) return res.status(400).json({ error: error.message });
+  res.json(data);
+});
+
+// ─── POST /leads/:id/enviar  (enviar WhatsApp desde el panel) ─────────────────
+app.post("/leads/:id/enviar", async (req, res) => {
+  if (!supabase) return res.status(503).json({ error: "Supabase no configurado" });
+  const { mensaje } = req.body;
+  if (!mensaje) return res.status(400).json({ error: "Falta 'mensaje'" });
+
+  const { data: lead, error: leadErr } = await supabase
+    .from("leads")
+    .select("*")
+    .eq("id", req.params.id)
+    .single();
+  if (leadErr || !lead) return res.status(404).json({ error: "Lead no encontrado" });
+
+  if (lead.phone_number_id && lead.user_phone) {
+    await sendWhatsAppMessage(lead.phone_number_id, lead.user_phone, mensaje);
+  }
+  await saveMessage(lead.id, lead.user_phone, "saliente", "texto", mensaje);
+  res.json({ ok: true });
+});
+
 
 // ─── Servidor ─────────────────────────────────────────────────────────────────
 const PORT = process.env.PORT || 3000;
